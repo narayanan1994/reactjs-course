@@ -45,8 +45,13 @@ export async function getStaticPaths() {
   //   console.log(meetups); // these are server side logs, printed in terminal
   client.close();
 
+  // fallback: false - it indicates all combo of paths, this tells react that if user enters any meetupId/any-value other than combo then redirected to 404page
+  // fallback: true - this allows react to try to get the page, dynamically with params, on the fly when getting request
+  // when fallback: true - and new set of route request comes which is not present in combo, it will prerender page first with empty content and then after generated it will load
+  // when fallback: 'blocking' - it will not pre-render immediately, it will wait for page to be generated and then it will cache and render 
+  // in both cases, fallback:true or fallback:'blocking' - it will not throw 404page
   return {
-    fallback: false,
+    fallback: 'blocking',
     paths: meetups.map((meetup) => ({
       params: { meetupId: meetup._id.toString() },
     })),
